@@ -4,6 +4,9 @@
 
 [build.environment]
   NODE_VERSION = "18"
+  # Langflow API environment variables
+  VITE_LANGFLOW_API_BASE_URL = "https://mpl-langflow-domain.alfalivin.com"
+  VITE_LANGFLOW_FLOW_ID = "9bf00aff-1722-4a3e-af54-51c2ffbe4f94"
 
 # Handle SPA routing
 [[redirects]]

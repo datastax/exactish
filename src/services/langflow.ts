@@ -1,9 +1,12 @@
 import { IterationImage } from '../types';
 
-const LANGFLOW_API_BASE_URL = 'https://mpl-langflow-domain.alfalivin.com';
-const LANGFLOW_RUN_API_URL = `${LANGFLOW_API_BASE_URL}/api/v1/run/9bf00aff-1722-4a3e-af54-51c2ffbe4f94`;
+// Get environment variables with fallbacks for development
+const LANGFLOW_API_BASE_URL = import.meta.env.VITE_LANGFLOW_API_BASE_URL;
+const LANGFLOW_FLOW_ID = import.meta.env.VITE_LANGFLOW_FLOW_ID;
+
+// Construct API URLs using environment variables
+const LANGFLOW_RUN_API_URL = `${LANGFLOW_API_BASE_URL}/api/v1/run/${LANGFLOW_FLOW_ID}`;
 const LANGFLOW_FILES_API_URL = `${LANGFLOW_API_BASE_URL}/api/v2/files`;
-// Removed retry-related constants as they're no longer needed
 
 export const processImageWithLangflow = async (imageFile: File): Promise<string> => {
   try {
