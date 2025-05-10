@@ -26,12 +26,12 @@ function App() {
     <div className="min-h-screen bg-[#030303]">
       <DemoHeroGeometric />
       
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-0 relative z-10 -mt-52">
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-0 relative z-10 -mt-80">
         <div className="bg-transparent backdrop-filter backdrop-blur-sm shadow-xl rounded-xl overflow-hidden border border-white/10 mb-8">
           <div className="p-6">
             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="w-full md:w-5/12 text-center">
-                <h3 className="text-xl font-bold text-white mb-2">This</h3>
+                <h3 className="text-xl font-bold text-white mb-2">From this...</h3>
                 <div className="relative w-full aspect-square md:aspect-auto md:h-64 overflow-hidden rounded-lg border border-white/10">
                   <img src="/Before.jpeg" alt="Before" className="w-full h-full object-contain" />
                 </div>
@@ -46,7 +46,7 @@ function App() {
               </div>
               
               <div className="w-full md:w-5/12 text-center">
-                <h3 className="text-xl font-bold text-white mb-2">To This</h3>
+                <h3 className="text-xl font-bold text-white mb-2">...to this</h3>
                 <div className="relative w-full aspect-square md:aspect-auto md:h-64 overflow-hidden rounded-lg border border-white/10">
                   <img src="/After.gif" alt="After" className="w-full h-full object-contain" />
                 </div>

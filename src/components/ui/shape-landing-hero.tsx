@@ -93,7 +93,7 @@ function HeroGeometric({
     };
 
     return (
-        <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-[#030303]">
+        <div className="relative min-h-screen w-full flex items-start pt-24 md:pt-32 justify-center overflow-hidden bg-[#030303]">
             <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] via-transparent to-rose-500/[0.05] blur-3xl" />
 
             <div className="absolute inset-0 overflow-hidden">
@@ -103,7 +103,7 @@ function HeroGeometric({
                     height={140}
                     rotate={12}
                     gradient="from-indigo-500/[0.25]"
-                    className="left-[-10%] md:left-[-5%] top-[15%] md:top-[20%]"
+                    className="left-[-10%] md:left-[-5%] top-[5%] md:top-[10%]"
                 />
 
                 <ElegantShape
@@ -112,7 +112,7 @@ function HeroGeometric({
                     height={120}
                     rotate={-15}
                     gradient="from-rose-500/[0.25]"
-                    className="right-[-5%] md:right-[0%] top-[70%] md:top-[75%]"
+                    className="right-[-15%] md:right-[-10%] bottom-[25%] md:bottom-[30%]"
                 />
 
                 <ElegantShape
@@ -130,7 +130,7 @@ function HeroGeometric({
                     height={60}
                     rotate={20}
                     gradient="from-amber-500/[0.25]"
-                    className="right-[15%] md:right-[20%] top-[10%] md:top-[15%]"
+                    className="right-[15%] md:right-[20%] top-[0%] md:top-[5%]"
                 />
 
                 <ElegantShape
@@ -139,7 +139,7 @@ function HeroGeometric({
                     height={40}
                     rotate={-25}
                     gradient="from-cyan-500/[0.25]"
-                    className="left-[20%] md:left-[25%] top-[5%] md:top-[10%]"
+                    className="left-[20%] md:left-[25%] top-[-5%] md:top-[0%]"
                 />
             </div>
 
@@ -191,7 +191,7 @@ function HeroGeometric({
                         animate="visible"
                     >
                         <p className="text-base sm:text-lg md:text-xl text-white/40 mb-8 leading-relaxed font-light tracking-wide max-w-xl mx-auto px-4">
-                        This application uses OpenAI's image API to iteratively process images.
+                        This application uses Langflow and image APIs to iteratively process images.
                         Each iteration uses the prompt: "Create the exact replica of this image, don't change a thing."
                         </p>
                     </motion.div>
