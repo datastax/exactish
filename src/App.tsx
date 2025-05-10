@@ -26,29 +26,29 @@ function App() {
     <div className="min-h-screen bg-[#030303]">
       <DemoHeroGeometric />
       
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-0 relative z-10 -mt-32">
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-0 relative z-10 -mt-52">
         <div className="bg-transparent backdrop-filter backdrop-blur-sm shadow-xl rounded-xl overflow-hidden border border-white/10 mb-8">
           <div className="p-6">
             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-              <div className="flex-1 text-center md:text-left">
+              <div className="w-full md:w-5/12 text-center">
                 <h3 className="text-xl font-bold text-white mb-2">This</h3>
-                <div className="relative w-full h-48 md:h-64 overflow-hidden rounded-lg border border-white/10">
-                  <img src="/Before.jpeg" alt="Before" className="w-full h-full object-cover" />
+                <div className="relative w-full aspect-square md:aspect-auto md:h-64 overflow-hidden rounded-lg border border-white/10">
+                  <img src="/Before.jpeg" alt="Before" className="w-full h-full object-contain" />
                 </div>
               </div>
               
-              <div className="hidden md:flex items-center justify-center">
-                <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="flex items-center justify-center py-2 md:py-0">
+                <div className="w-10 h-10 md:w-16 md:h-16 rounded-full bg-white/10 flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 md:h-8 md:w-8 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
                 </div>
               </div>
               
-              <div className="flex-1 text-center md:text-right">
+              <div className="w-full md:w-5/12 text-center">
                 <h3 className="text-xl font-bold text-white mb-2">To This</h3>
-                <div className="relative w-full h-48 md:h-64 overflow-hidden rounded-lg border border-white/10">
-                  <img src="/After.gif" alt="After" className="w-full h-full object-cover" />
+                <div className="relative w-full aspect-square md:aspect-auto md:h-64 overflow-hidden rounded-lg border border-white/10">
+                  <img src="/After.gif" alt="After" className="w-full h-full object-contain" />
                 </div>
               </div>
             </div>
@@ -104,18 +104,26 @@ function App() {
                 images={state.iterationImages}
                 selectedImageIndex={selectedImageIndex}
                 onSelectImage={setSelectedImageIndex}
+                isProcessing={state.isProcessing}
               />
             </div>
           )}
         </div>
         
-        <div className="mt-6 text-center text-sm text-blue-200">
-          <div className="flex items-center justify-center">
-            <span className="mr-2">Powered by</span>
-            <div className="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-md px-2 py-1">
-              <img src="/langflow_logo.jpeg" alt="Langflow Logo" className="h-6" />
+        <div className="mt-6 pb-20 text-center">
+          <a 
+            href="https://langflow.org" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/30 border border-white/10 hover:bg-black/50 transition-colors duration-200 backdrop-filter backdrop-blur-sm"
+          >
+            <div className="h-5 w-5 overflow-hidden rounded-full bg-white/10 flex items-center justify-center">
+              <img src="/langflow_logo.jpeg" alt="Langflow" className="h-4 w-4 object-cover" />
             </div>
-          </div>
+            <span className="text-sm text-white/60 tracking-wide">
+              Powered by Langflow
+            </span>
+          </a>
         </div>
         
         <div className="absolute inset-0 bg-gradient-to-t from-[#030303] via-transparent to-[#030303]/80 pointer-events-none -z-10" />

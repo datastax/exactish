@@ -7,12 +7,14 @@ interface ResultGalleryProps {
   images: IterationImage[];
   selectedImageIndex: number;
   onSelectImage: (index: number) => void;
+  isProcessing?: boolean; // Added isProcessing prop
 }
 
 const ResultGallery: React.FC<ResultGalleryProps> = ({
   images,
   selectedImageIndex,
-  onSelectImage
+  onSelectImage,
+  isProcessing = false // Default to false if not provided
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -84,7 +86,8 @@ const ResultGallery: React.FC<ResultGalleryProps> = ({
             </button>
             */}
             
-            {images.length > 1 && (
+            {/* Only show Download GIF button when there are multiple images AND processing is complete */}
+            {images.length > 1 && !isProcessing && (
               <>
                 <button
                   onClick={handleDownloadGif}
