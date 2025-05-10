@@ -5,8 +5,11 @@
 [build.environment]
   NODE_VERSION = "18"
   # Langflow API environment variables
-  VITE_LANGFLOW_API_BASE_URL = "https://mpl-langflow-domain.alfalivin.com"
-  VITE_LANGFLOW_FLOW_ID = "9bf00aff-1722-4a3e-af54-51c2ffbe4f94"
+  VITE_LANGFLOW_API_BASE_URL = "https://langflow-jfjl.onrender.com"
+  VITE_LANGFLOW_FLOW_ID = "871a20c9-d626-4851-b44b-f5b95feec937"
+  VITE_LANGFLOW_IMAGE_COMPONENT_KEY = "ImageFile-GJs3c"
+  # UI Configuration
+  VITE_SHOW_ITERATION_CONTROLS = "false"
 
 # Handle SPA routing
 [[redirects]]

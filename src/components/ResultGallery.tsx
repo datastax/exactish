@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
-import { Download, ArrowLeft, ArrowRight, Image as ImageIcon, Film, Gift as Gif } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Image as ImageIcon } from 'lucide-react';
 import { IterationImage } from '../types';
-import { createGif, createVideo } from '../services/animation';
+import { createGif } from '../services/animation';
 
 interface ResultGalleryProps {
   images: IterationImage[];
@@ -16,14 +16,7 @@ const ResultGallery: React.FC<ResultGalleryProps> = ({
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const handleDownload = (imageData: string) => {
-    const link = document.createElement('a');
-    link.href = imageData;
-    link.download = `iteration-image-${Date.now()}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+  // Image download function removed as requested
 
   const handleDownloadGif = async () => {
     try {
@@ -41,21 +34,7 @@ const ResultGallery: React.FC<ResultGalleryProps> = ({
     }
   };
 
-  const handleDownloadVideo = async () => {
-    try {
-      const blob = await createVideo(images);
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `iterations-${Date.now()}.webm`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Error creating video:', error);
-    }
-  };
+  // Video download function removed as requested
 
   const scrollToImage = (direction: 'left' | 'right') => {
     if (!scrollRef.current) return;
@@ -73,10 +52,10 @@ const ResultGallery: React.FC<ResultGalleryProps> = ({
 
   if (images.length === 0) {
     return (
-      <div className="w-full h-60 flex items-center justify-center bg-gray-50 rounded-lg border border-gray-200">
-        <div className="text-center text-gray-500">
-          <ImageIcon className="mx-auto h-12 w-12 text-gray-400" />
-          <p className="mt-2 text-sm">No iterations yet</p>
+      <div className="w-full h-60 flex items-center justify-center bg-white/5 rounded-xl border border-white/10">
+        <div className="text-center text-white/60">
+          <ImageIcon className="mx-auto h-12 w-12 text-white/40" />
+          <p className="mt-2 text-sm">Generated images will appear here</p>
         </div>
       </div>
     );
@@ -87,7 +66,7 @@ const ResultGallery: React.FC<ResultGalleryProps> = ({
   return (
     <div className="w-full space-y-4">
       <div className="relative">
-        <div className="w-full rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center min-h-[300px]">
+        <div className="w-full rounded-xl overflow-hidden bg-white/5 flex items-center justify-center min-h-[300px] border border-white/10">
           <img 
             src={selectedImage.imageData} 
             alt={`Iteration ${selectedImage.id}`}
@@ -95,6 +74,7 @@ const ResultGallery: React.FC<ResultGalleryProps> = ({
           />
           
           <div className="absolute bottom-4 right-4 flex space-x-2">
+            {/* Commented out image download button
             <button
               onClick={() => handleDownload(selectedImage.imageData)}
               className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-all"
@@ -102,17 +82,18 @@ const ResultGallery: React.FC<ResultGalleryProps> = ({
             >
               <Download size={20} className="text-gray-700" />
             </button>
+            */}
             
             {images.length > 1 && (
               <>
                 <button
                   onClick={handleDownloadGif}
-                  className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-all"
-                  title="Download as GIF"
+                  className="bg-gradient-to-r from-indigo-400 to-rose-400 text-white rounded-lg px-4 py-2 text-sm font-medium shadow-md hover:from-indigo-500 hover:to-rose-500 transition-all duration-200"
                 >
-                  <Gif size={20} className="text-gray-700" />
+                  Download GIF
                 </button>
                 
+                {/* Commented out video download button
                 <button
                   onClick={handleDownloadVideo}
                   className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-all"
@@ -120,6 +101,7 @@ const ResultGallery: React.FC<ResultGalleryProps> = ({
                 >
                   <Film size={20} className="text-gray-700" />
                 </button>
+                */}
               </>
             )}
           </div>
@@ -129,9 +111,9 @@ const ResultGallery: React.FC<ResultGalleryProps> = ({
           {selectedImageIndex > 0 && (
             <button
               onClick={() => onSelectImage(selectedImageIndex - 1)}
-              className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-all"
+              className="bg-white/20 backdrop-filter backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white/30 transition-all"
             >
-              <ArrowLeft size={20} className="text-gray-700" />
+              <ArrowLeft size={20} className="text-white" />
             </button>
           )}
         </div>
@@ -140,9 +122,9 @@ const ResultGallery: React.FC<ResultGalleryProps> = ({
           {selectedImageIndex < images.length - 1 && (
             <button
               onClick={() => onSelectImage(selectedImageIndex + 1)}
-              className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-all"
+              className="bg-white/20 backdrop-filter backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white/30 transition-all"
             >
-              <ArrowRight size={20} className="text-gray-700" />
+              <ArrowRight size={20} className="text-white" />
             </button>
           )}
         </div>
@@ -150,11 +132,11 @@ const ResultGallery: React.FC<ResultGalleryProps> = ({
       
       <div className="relative">
         <div className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10">
-          <button
-            onClick={() => scrollToImage('left')}
-            className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-all"
-          >
-            <ArrowLeft size={16} className="text-gray-700" />
+            <button
+              onClick={() => scrollToImage('left')}
+              className="bg-white/10 hover:bg-white/20 transition-colors duration-150 rounded-full w-8 h-8 flex items-center justify-center text-white/60 shadow-md"
+            >
+            <ArrowLeft size={16} />
           </button>
         </div>
         
@@ -166,9 +148,9 @@ const ResultGallery: React.FC<ResultGalleryProps> = ({
             <div 
               key={image.id}
               onClick={() => onSelectImage(index)}
-              className={`flex-shrink-0 cursor-pointer rounded-md overflow-hidden transition-all
+              className={`flex-shrink-0 cursor-pointer rounded-lg overflow-hidden transition-all
                 ${selectedImageIndex === index 
-                  ? 'ring-2 ring-purple-500 ring-offset-2' 
+                  ? 'ring-2 ring-indigo-400 ring-offset-2 ring-offset-[#030303]' 
                   : 'opacity-70 hover:opacity-100'
                 }
               `}
@@ -184,16 +166,16 @@ const ResultGallery: React.FC<ResultGalleryProps> = ({
         </div>
         
         <div className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10">
-          <button
-            onClick={() => scrollToImage('right')}
-            className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-all"
-          >
-            <ArrowRight size={16} className="text-gray-700" />
+            <button
+              onClick={() => scrollToImage('right')}
+              className="bg-white/10 hover:bg-white/20 transition-colors duration-150 rounded-full w-8 h-8 flex items-center justify-center text-white/60 shadow-md"
+            >
+            <ArrowRight size={16} />
           </button>
         </div>
       </div>
       
-      <div className="text-center text-sm text-gray-500">
+      <div className="text-center text-sm text-white/60">
         <p>Iteration {selectedImage.id} of {images.length}</p>
       </div>
     </div>

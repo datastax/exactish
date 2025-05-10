@@ -64,9 +64,9 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   return (
     <div className="w-full">
       <div 
-        className={`relative border-2 border-dashed rounded-lg p-6 transition-all duration-200 
-          ${isDragging ? 'border-purple-500 bg-purple-50' : 'border-gray-300'} 
-          ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-50'}`}
+        className={`relative border-2 border-dashed rounded-xl p-6 transition-all duration-200 
+          ${isDragging ? 'border-blue-400 bg-purple-900 bg-opacity-50' : 'border-purple-300 border-opacity-50 bg-purple-800 bg-opacity-20'} 
+          ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-purple-900 hover:bg-opacity-30'}`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
@@ -86,7 +86,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
             <img 
               src={previewUrl} 
               alt="Preview" 
-              className="w-full max-h-80 object-contain rounded-md shadow-sm mx-auto"
+              className="w-full max-h-80 object-contain rounded-xl shadow-lg mx-auto"
             />
             {!disabled && (
               <button 
@@ -94,20 +94,20 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
                   e.stopPropagation();
                   handleClearImage();
                 }}
-                className="absolute top-2 right-2 bg-white rounded-full p-1 shadow-md hover:bg-gray-100"
+                className="absolute top-2 right-2 bg-white bg-opacity-80 backdrop-filter backdrop-blur-sm rounded-full p-1 shadow-lg hover:bg-opacity-100 transition-all duration-200"
                 disabled={disabled}
               >
-                <X size={20} className="text-gray-700" />
+                <X size={20} className="text-purple-700" />
               </button>
             )}
           </div>
         ) : (
-          <div className="text-center">
-            <Upload className="mx-auto h-12 w-12 text-gray-400" />
-            <p className="mt-2 text-sm font-medium text-gray-900">
-              Drag and drop an image, or click to select
+          <div className="flex flex-col items-center justify-center p-4 text-center">
+            <Upload className="w-12 h-12 text-blue-300 mb-3" />
+            <p className="text-blue-200 font-medium">
+              Drag & Drop or Click to Upload
             </p>
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-blue-300 text-sm">
               Accepted formats: PNG, JPG, JPEG, GIF, BMP, WEBP up to 10MB
             </p>
           </div>

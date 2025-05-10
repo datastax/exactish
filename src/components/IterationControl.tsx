@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { RotateCcw } from 'lucide-react';
 
 interface IterationControlProps {
@@ -20,38 +20,60 @@ const IterationControl: React.FC<IterationControlProps> = ({
   onReset,
   disabled
 }) => {
+  // Get the environment variable to determine if iteration controls should be shown
+  const showIterationControls = import.meta.env.VITE_SHOW_ITERATION_CONTROLS === 'true';
+  
+  // Set iterations to 10 by default if controls are hidden
+  useEffect(() => {
+    if (!showIterationControls && iterations !== 10) {
+      onIterationsChange(10);
+    }
+  }, [showIterationControls, iterations, onIterationsChange]);
   const progress = currentIteration > 0 
     ? Math.min((currentIteration / iterations) * 100, 100)
     : 0;
 
   return (
     <div className="w-full space-y-4">
-      <div className="flex items-center justify-between">
-        <label htmlFor="iterations" className="block text-sm font-medium text-gray-700">
-          Number of Iterations
-        </label>
-        <span className="text-sm text-gray-500">{iterations}</span>
-      </div>
-      
-      <input
-        type="range"
-        id="iterations"
-        min="1"
-        max="50"
-        value={iterations}
-        onChange={(e) => onIterationsChange(parseInt(e.target.value))}
-        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-purple-600"
-        disabled={isProcessing || disabled}
-      />
+      {showIterationControls ? (
+        <>
+          <div className="flex justify-between text-white/60 text-sm mb-1">
+            <label htmlFor="iterations" className="block font-medium">
+              Number of Iterations
+            </label>
+            <span>{iterations}</span>
+          </div>
+          
+          <div className="bg-white/10 h-2 rounded-full w-full mb-6 relative">
+            <div 
+              className="absolute top-0 left-0 h-2 bg-gradient-to-r from-indigo-400 to-rose-400 rounded-full transition-all duration-300"
+              style={{ width: `${(iterations / 50) * 100}%` }}
+            ></div>
+            <input
+              type="range"
+              id="iterations"
+              min="1"
+              max="50"
+              value={iterations}
+              onChange={(e) => onIterationsChange(parseInt(e.target.value))}
+              className="absolute inset-0 w-full h-2 opacity-0 cursor-pointer"
+              disabled={isProcessing || disabled}
+            />
+          </div>
+        </>
+      ) : (
+        /* Hidden iteration configuration - fixed at 10 */
+        null
+      )}
       
       <div className="flex items-center gap-4">
         <button
           onClick={onStart}
           disabled={isProcessing || disabled}
-          className={`flex-1 py-2 px-4 rounded-md text-white font-medium transition-all
+          className={`flex-1 py-3 px-4 rounded-lg text-white font-medium transition-all shadow-lg
             ${isProcessing || disabled
-              ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-purple-600 hover:bg-purple-700'}
+              ? 'bg-gray-500 bg-opacity-50 cursor-not-allowed'
+              : 'bg-gradient-to-r from-indigo-400 to-rose-400 hover:from-indigo-500 hover:to-rose-500'}
           `}
         >
           {isProcessing ? 'Processing...' : 'Start Iteration Process'}
@@ -59,7 +81,7 @@ const IterationControl: React.FC<IterationControlProps> = ({
         
         <button
           onClick={onReset}
-          className="p-2 rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 transition-all"
+          className="p-2 rounded-full text-white/60 bg-white/5 hover:bg-white/10 transition-all shadow-md"
           title="Reset"
         >
           <RotateCcw size={20} />
@@ -67,14 +89,14 @@ const IterationControl: React.FC<IterationControlProps> = ({
       </div>
       
       {isProcessing && (
-        <div className="w-full space-y-2">
-          <div className="flex justify-between text-sm">
+        <div className="w-full space-y-2 mt-4">
+          <div className="flex justify-between text-sm text-white/60">
             <span>Iteration {currentIteration} of {iterations}</span>
             <span>{Math.round(progress)}%</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2.5">
+          <div className="w-full bg-white/10 rounded-full h-2.5">
             <div 
-              className="bg-purple-600 h-2.5 rounded-full transition-all duration-300 ease-out"
+              className="bg-gradient-to-r from-indigo-400 to-rose-400 h-2.5 rounded-full transition-all duration-300 ease-out"
               style={{ width: `${progress}%` }}
             ></div>
           </div>

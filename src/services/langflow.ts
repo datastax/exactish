@@ -3,6 +3,7 @@ import { IterationImage } from '../types';
 // Get environment variables with fallbacks for development
 const LANGFLOW_API_BASE_URL = import.meta.env.VITE_LANGFLOW_API_BASE_URL;
 const LANGFLOW_FLOW_ID = import.meta.env.VITE_LANGFLOW_FLOW_ID;
+const LANGFLOW_IMAGE_COMPONENT_KEY = import.meta.env.VITE_LANGFLOW_IMAGE_COMPONENT_KEY || 'ImageFile-GJs3c';
 
 // Construct API URLs using environment variables
 const LANGFLOW_RUN_API_URL = `${LANGFLOW_API_BASE_URL}/api/v1/run/${LANGFLOW_FLOW_ID}`;
@@ -62,7 +63,7 @@ export const processImageWithLangflow = async (imageFile: File): Promise<string>
         output_type: "chat",
         input_type: "chat",
         tweaks: {
-          "ImageFile-4ASFg": {
+          [LANGFLOW_IMAGE_COMPONENT_KEY]: {
             path: [uploadData.path]
           }
         }
