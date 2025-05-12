@@ -54,10 +54,6 @@ function App() {
             </div>
           </div>
         </div>
-        
-        {state.error && (
-          <ErrorDisplay message={state.error} onDismiss={handleDismissError} />
-        )}
 
         <div className="bg-transparent backdrop-filter backdrop-blur-sm shadow-xl rounded-xl overflow-hidden border border-white/10">
           <div className="p-6">
@@ -106,6 +102,12 @@ function App() {
                 onSelectImage={setSelectedImageIndex}
                 isProcessing={state.isProcessing}
               />
+            </div>
+          )}
+          
+          {state.error && (
+            <div className="border-t border-white/5 p-6">
+              <ErrorDisplay message={state.error} onDismiss={handleDismissError} />
             </div>
           )}
         </div>

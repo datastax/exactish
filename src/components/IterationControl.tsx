@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { RotateCcw } from 'lucide-react';
+import { RotateCcw, Loader2 } from 'lucide-react';
 
 interface IterationControlProps {
   iterations: number;
@@ -70,12 +70,13 @@ const IterationControl: React.FC<IterationControlProps> = ({
         <button
           onClick={onStart}
           disabled={isProcessing || disabled}
-          className={`flex-1 py-3 px-4 rounded-lg text-white font-medium transition-all shadow-lg
+          className={`flex-1 py-3 px-4 rounded-lg text-white font-medium transition-all shadow-lg flex items-center justify-center gap-2
             ${isProcessing || disabled
               ? 'bg-gray-500 bg-opacity-50 cursor-not-allowed'
               : 'bg-gradient-to-r from-indigo-400 to-rose-400 hover:from-indigo-500 hover:to-rose-500'}
           `}
         >
+          {isProcessing && <Loader2 size={18} className="animate-spin" />}
           {isProcessing ? 'Processing...' : 'Start Iteration Process'}
         </button>
         
@@ -88,20 +89,31 @@ const IterationControl: React.FC<IterationControlProps> = ({
         </button>
       </div>
       
-      {isProcessing && (
-        <div className="w-full space-y-2 mt-4">
-          <div className="flex justify-between text-sm text-white/60">
-            <span>Iteration {currentIteration} of {iterations}</span>
-            <span>{Math.round(progress)}%</span>
+      <div className="w-full mt-2">
+        {!isProcessing && (
+          <p className="text-sm text-white/60 mt-2">
+            Processing usually takes between 3-5 minutes, as it calls the image edit model sequentially.
+          </p>
+        )}
+        
+        {isProcessing && (
+          <div className="w-full space-y-2 mt-4">
+            <div className="flex justify-between text-sm text-white/60">
+              <span>Iteration {currentIteration} of {iterations}</span>
+              <span>{Math.round(progress)}%</span>
+            </div>
+            <div className="w-full bg-white/10 rounded-full h-2.5">
+              <div 
+                className="bg-gradient-to-r from-indigo-400 to-rose-400 h-2.5 rounded-full transition-all duration-300 ease-out"
+                style={{ width: `${progress}%` }}
+              ></div>
+            </div>
+            <p className="text-sm text-white/60 mt-2">
+              Processing usually takes between 3-5 minutes, as it calls the image edit model sequentially.
+            </p>
           </div>
-          <div className="w-full bg-white/10 rounded-full h-2.5">
-            <div 
-              className="bg-gradient-to-r from-indigo-400 to-rose-400 h-2.5 rounded-full transition-all duration-300 ease-out"
-              style={{ width: `${progress}%` }}
-            ></div>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { IterationImage } from '../types';
+// Import types used in this file as needed
 
 // Get environment variables with fallbacks for development
 const LANGFLOW_API_BASE_URL = import.meta.env.VITE_LANGFLOW_API_BASE_URL;
@@ -122,7 +122,9 @@ export const processImageWithLangflow = async (imageFile: File): Promise<string>
       });
       
       if (parsedMessage.status !== 'success' || !parsedMessage.image_data_uri) {
-        throw new Error('Invalid response from Langflow: Missing required data');
+        // Capture more specific error information if available
+        const errorReason = parsedMessage.error || parsedMessage.message || 'Missing required data';
+        throw new Error(`Invalid response from Langflow: ${errorReason}`);
       }
 
       if (!parsedMessage.image_data_uri.startsWith('data:image/')) {

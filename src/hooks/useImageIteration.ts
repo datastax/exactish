@@ -1,8 +1,13 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { processImageWithLangflow, base64ToFile, fileToBase64 } from '../services/langflow';
-import { AppState, IterationImage } from '../types';
+import { AppState } from '../types';
+import { requestNotificationPermission, sendNotification } from '../utils/notifications';
 
 export const useImageIteration = () => {
+  // Request notification permission when the hook is first used
+  useEffect(() => {
+    requestNotificationPermission();
+  }, []);
   const [state, setState] = useState<AppState>({
     originalImage: null,
     originalImagePreview: null,
@@ -40,9 +45,10 @@ export const useImageIteration = () => {
       }));
     } catch (error) {
       console.error('Error setting original image:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       setState(prev => ({
         ...prev,
-        error: 'Failed to load the image: ' + error.message,
+        error: 'Failed to load the image: ' + errorMessage,
       }));
     }
   }, []);
@@ -123,12 +129,19 @@ export const useImageIteration = () => {
           console.log(`Completed iteration ${i + 1}`);
         } catch (iterationError) {
           console.error(`Error in iteration ${i + 1}:`, iterationError);
-          const errorMessage = `Error in iteration ${i + 1}: ${iterationError.message}. Please try again later or contact support if the issue persists.`;
+          const errorMessage = `Error in iteration ${i + 1}: ${iterationError instanceof Error ? iterationError.message : 'Unknown error'}. Please try again later or contact support if the issue persists.`;
           setState(prev => ({
             ...prev,
             error: errorMessage,
             isProcessing: false,
           }));
+          
+          // Send error notification
+          sendNotification('Image Processing Error', {
+            body: `There was an error processing your image in iteration ${i + 1}. Please check the application for details.`,
+            icon: '/favicon.ico'
+          });
+          
           return;
         }
       }
@@ -138,6 +151,12 @@ export const useImageIteration = () => {
         isProcessing: false,
       }));
       console.log('Iteration process completed successfully');
+      
+      // Send completion notification
+      sendNotification('Image Processing Complete', {
+        body: `Successfully completed ${state.iterations} iterations of your image.`,
+        icon: '/favicon.ico'
+      });
     } catch (error) {
       console.error('Error during iteration process:', error);
       const errorMessage = error instanceof Error 
@@ -148,6 +167,12 @@ export const useImageIteration = () => {
         isProcessing: false,
         error: errorMessage,
       }));
+      
+      // Send error notification
+      sendNotification('Image Processing Error', {
+        body: 'There was an error processing your image. Please check the application for details.',
+        icon: '/favicon.ico'
+      });
     }
   }, [state.originalImage, state.iterations]);
 
