@@ -1,8 +1,8 @@
 // using Twilio SendGrid's v3 Node.js Library
-const sgMail = require('@sendgrid/mail');
-const client = require('@sendgrid/client');
+import sgMail from '@sendgrid/mail';
+import client from '@sendgrid/client';
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   console.log('🔵 API FUNCTION: send-email triggered');
   console.log('🔍 Request method:', req.method);
   console.log('🔍 Origin:', req.headers.origin || 'No origin');
@@ -36,9 +36,9 @@ module.exports = async (req, res) => {
     console.log('🖼️ Image data included:', !!imageData);
     
     // Log environment variables (without revealing values)
-    console.log('🔐 SENDGRID_API_KEY present:', !!process.env.SENDGRID_API_KEY);
-    console.log('📤 SENDGRID_FROM_EMAIL:', process.env.SENDGRID_FROM_EMAIL);
-    console.log('↩️ SENDGRID_REPLY_EMAIL:', process.env.SENDGRID_REPLY_EMAIL);
+    // console.log('🔐 SENDGRID_API_KEY present:', !!process.env.SENDGRID_API_KEY);
+    // console.log('📤 SENDGRID_FROM_EMAIL:', process.env.SENDGRID_FROM_EMAIL);
+    // console.log('↩️ SENDGRID_REPLY_EMAIL:', process.env.SENDGRID_REPLY_EMAIL);
 
     // Validate required fields
     if (!email || !subject || !message) {
@@ -85,7 +85,7 @@ module.exports = async (req, res) => {
     };
 
     // Send the email
-    console.log(' Sending email via SendGrid...');
+    // console.log(' Sending email via SendGrid...');
     try {
       const response = await sgMail.send(msg);
       console.log(' SendGrid response:', response);
@@ -128,7 +128,7 @@ module.exports = async (req, res) => {
           // Continue even if adding to list fails - don't block email sending
         }
       } else {
-        console.log(' Marketing contacts feature is disabled. Set SENDGRID_ENABLE_MARKETING=true to enable.');
+        // console.log(' Marketing contacts feature is disabled. Set SENDGRID_ENABLE_MARKETING=true to enable.');
       }
       
       res.setHeader('Access-Control-Allow-Origin', '*');
