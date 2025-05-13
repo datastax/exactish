@@ -6,7 +6,7 @@
 // Use the deployed function URL if available, otherwise use the local path
 const EMAIL_API_ENDPOINT = import.meta.env.VITE_NETLIFY_EMAIL_FUNCTION_URL || '/.netlify/functions/send-email';
 
-console.log('Using email API endpoint:', EMAIL_API_ENDPOINT);
+// console.log('Using email API endpoint:', EMAIL_API_ENDPOINT);
 
 /**
  * Interface for email notification data
@@ -25,15 +25,15 @@ interface EmailNotificationData {
  */
 export const sendEmailNotification = async (data: EmailNotificationData): Promise<boolean> => {
   try {
-    console.log('🔵 SENDING EMAIL NOTIFICATION');
-    console.log('📧 To:', data.email);
-    console.log('📋 Subject:', data.subject);
-    console.log('📝 Message:', data.message);
-    console.log('🖼️ Image included:', !!data.imageData);
-    console.log('🔗 Using endpoint:', EMAIL_API_ENDPOINT);
+    // console.log('🔵 SENDING EMAIL NOTIFICATION');
+    // console.log('📧 To:', data.email);
+    // console.log('📋 Subject:', data.subject);
+    // console.log('📝 Message:', data.message);
+    // console.log('🖼️ Image included:', !!data.imageData);
+    // console.log('🔗 Using endpoint:', EMAIL_API_ENDPOINT);
     
     // Call the Netlify function to send the email
-    console.log('⏳ Calling Netlify function...');
+    // console.log('⏳ Calling Netlify function...');
     const response = await fetch(EMAIL_API_ENDPOINT, {
       method: 'POST',
       headers: {
@@ -42,8 +42,8 @@ export const sendEmailNotification = async (data: EmailNotificationData): Promis
       body: JSON.stringify(data),
     });
     
-    console.log('📥 Response status:', response.status);
-    console.log('📥 Response status text:', response.statusText);
+    // console.log('📥 Response status:', response.status);
+    // console.log('📥 Response status text:', response.statusText);
     
     if (!response.ok) {
       let errorMessage = '';

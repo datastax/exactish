@@ -96,7 +96,7 @@ exports.handler = async (event, context) => {
             </div>
           ` : ''}
           <p style="margin-top: 20px; font-size: 0.9em; color: #666;">
-            This email was sent from the Image Iteration App.
+            This email was sent from the Exactish App.
           </p>
         </div>
       `,
