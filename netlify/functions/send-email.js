@@ -1,5 +1,6 @@
 // using Twilio SendGrid's v3 Node.js Library
 const sgMail = require('@sendgrid/mail');
+const client = require('@sendgrid/client');
 
 exports.handler = async (event, context) => {
   console.log('🔵 NETLIFY FUNCTION: send-email triggered');
@@ -107,6 +108,37 @@ exports.handler = async (event, context) => {
     try {
       const response = await sgMail.send(msg);
       console.log(' SendGrid response:', response);
+      
+      // Add contact to the Exactish list
+      try {
+        // Set the client API key
+        client.setApiKey(process.env.SENDGRID_API_KEY);
+        
+        // Prepare the request to add contact to list
+        const contactData = {
+          list_ids: ['939df3f2-1286-49ed-bf91-f711214d012b'], // Exactish list ID
+          contacts: [
+            {
+              email: email,
+              first_name: email.split('@')[0], // Use part before @ as first name
+              custom_fields: {}
+            }
+          ]
+        };
+        
+        const request = {
+          url: '/v3/marketing/contacts',
+          method: 'PUT',
+          body: contactData
+        };
+        
+        console.log(' Adding contact to SendGrid list...');
+        const [contactResponse, contactBody] = await client.request(request);
+        console.log(' Contact added to list response:', contactResponse.statusCode);
+      } catch (contactError) {
+        console.error(' Error adding contact to list:', contactError);
+        // Continue even if adding to list fails - don't block email sending
+      }
       
       return {
         statusCode: 200,

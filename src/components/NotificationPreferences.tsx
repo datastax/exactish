@@ -109,28 +109,33 @@ const NotificationPreferences: React.FC<NotificationPreferencesProps> = ({
               </p>
               
               {!emailSubmitted ? (
-                <form onSubmit={handleEmailSubmit} className="mt-2 flex items-center">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="your@email.com"
-                    disabled={isProcessing}
-                    className="flex-1 bg-black/30 border border-white/10 rounded-l-md px-3 py-1.5 text-xs text-white placeholder:text-white/30 focus:outline-none focus:ring-1 focus:ring-white/30"
-                    required
-                  />
-                  <button
-                    type="submit"
-                    disabled={isProcessing || !email || !email.includes('@')}
-                    className={`px-3 py-1.5 text-xs rounded-r-md
-                      ${isProcessing || !email || !email.includes('@')
-                        ? 'bg-white/10 text-white/40 cursor-not-allowed'
-                        : 'bg-white/20 text-white hover:bg-white/30 transition-colors'}
-                    `}
-                  >
-                    Submit
-                  </button>
-                </form>
+                <div>
+                  <form onSubmit={handleEmailSubmit} className="mt-2 flex items-center">
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="your@email.com"
+                      disabled={isProcessing}
+                      className="flex-1 bg-black/30 border border-white/10 rounded-l-md px-3 py-1.5 text-xs text-white placeholder:text-white/30 focus:outline-none focus:ring-1 focus:ring-white/30"
+                      required
+                    />
+                    <button
+                      type="submit"
+                      disabled={isProcessing || !email || !email.includes('@')}
+                      className={`px-3 py-1.5 text-xs rounded-r-md
+                        ${isProcessing || !email || !email.includes('@')
+                          ? 'bg-white/10 text-white/40 cursor-not-allowed'
+                          : 'bg-white/20 text-white hover:bg-white/30 transition-colors'}
+                      `}
+                    >
+                      Submit
+                    </button>
+                  </form>
+                  <p className="text-xs text-white/50 mt-2 italic">
+                    By providing your email, you agree to receive occasional updates from Langflow.
+                  </p>
+                </div>
               ) : (
                 <div className="mt-2 flex items-center justify-between">
                   <div className="text-xs text-green-400 flex items-center">
