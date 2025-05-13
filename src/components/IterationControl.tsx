@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
-import { RotateCcw, Loader2 } from 'lucide-react';
+import { RotateCcw } from 'lucide-react';
 
 interface IterationControlProps {
   iterations: number;
   onIterationsChange: (iterations: number) => void;
   currentIteration: number;
   isProcessing: boolean;
-  onStart: () => void;
   onReset: () => void;
   disabled: boolean;
 }
@@ -16,7 +15,6 @@ const IterationControl: React.FC<IterationControlProps> = ({
   onIterationsChange,
   currentIteration,
   isProcessing,
-  onStart,
   onReset,
   disabled
 }) => {
@@ -66,23 +64,11 @@ const IterationControl: React.FC<IterationControlProps> = ({
         null
       )}
       
-      <div className="flex items-center gap-4">
-        <button
-          onClick={onStart}
-          disabled={isProcessing || disabled}
-          className={`flex-1 py-3 px-4 rounded-lg text-white font-medium transition-all shadow-lg flex items-center justify-center gap-2
-            ${isProcessing || disabled
-              ? 'bg-gray-500 bg-opacity-50 cursor-not-allowed'
-              : 'bg-gradient-to-r from-indigo-400 to-rose-400 hover:from-indigo-500 hover:to-rose-500'}
-          `}
-        >
-          {isProcessing && <Loader2 size={18} className="animate-spin" />}
-          {isProcessing ? 'Processing...' : 'Start Iteration Process'}
-        </button>
-        
+      {/* Reset button moved to top-right corner */}
+      <div className="relative">
         <button
           onClick={onReset}
-          className="p-2 rounded-full text-white/60 bg-white/5 hover:bg-white/10 transition-all shadow-md"
+          className="absolute right-0 top-0 p-2 rounded-full text-white/60 bg-white/5 hover:bg-white/10 transition-all shadow-md"
           title="Reset"
         >
           <RotateCcw size={20} />

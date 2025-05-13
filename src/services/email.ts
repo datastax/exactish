@@ -3,7 +3,10 @@
  */
 
 // Define the API endpoint for the Netlify function that sends emails
-const EMAIL_API_ENDPOINT = '/.netlify/functions/send-email';
+// Use the deployed function URL if available, otherwise use the local path
+const EMAIL_API_ENDPOINT = import.meta.env.VITE_NETLIFY_EMAIL_FUNCTION_URL || '/.netlify/functions/send-email';
+
+console.log('Using email API endpoint:', EMAIL_API_ENDPOINT);
 
 /**
  * Interface for email notification data
@@ -22,9 +25,15 @@ interface EmailNotificationData {
  */
 export const sendEmailNotification = async (data: EmailNotificationData): Promise<boolean> => {
   try {
-    console.log('Sending email notification to:', data.email);
+    console.log('🔵 SENDING EMAIL NOTIFICATION');
+    console.log('📧 To:', data.email);
+    console.log('📋 Subject:', data.subject);
+    console.log('📝 Message:', data.message);
+    console.log('🖼️ Image included:', !!data.imageData);
+    console.log('🔗 Using endpoint:', EMAIL_API_ENDPOINT);
     
     // Call the Netlify function to send the email
+    console.log('⏳ Calling Netlify function...');
     const response = await fetch(EMAIL_API_ENDPOINT, {
       method: 'POST',
       headers: {
@@ -33,16 +42,32 @@ export const sendEmailNotification = async (data: EmailNotificationData): Promis
       body: JSON.stringify(data),
     });
     
+    console.log('📥 Response status:', response.status);
+    console.log('📥 Response status text:', response.statusText);
+    
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(`Failed to send email: ${errorData.error || response.statusText}`);
+      let errorMessage = '';
+      try {
+        const errorData = await response.json();
+        console.error('📛 API error response:', errorData);
+        errorMessage = errorData.error || errorData.details || response.statusText;
+      } catch (jsonError) {
+        console.error('📛 Could not parse error response as JSON');
+        const textResponse = await response.text();
+        console.error('📛 Raw error response:', textResponse);
+        errorMessage = response.statusText;
+      }
+      throw new Error(`Failed to send email: ${errorMessage}`);
     }
     
     const result = await response.json();
-    console.log('Email notification sent successfully:', result);
+    console.log('✅ Email notification sent successfully:', result);
     return true;
   } catch (error) {
-    console.error('Error sending email notification:', error instanceof Error ? error.message : 'Unknown error');
+    console.error('❌ Error sending email notification:', error instanceof Error ? error.message : 'Unknown error');
+    if (error instanceof Error && error.stack) {
+      console.error('📚 Stack trace:', error.stack);
+    }
     return false;
   }
 };

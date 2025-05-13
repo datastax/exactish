@@ -10,7 +10,7 @@
   VITE_LANGFLOW_FLOW_ID = "871a20c9-d626-4851-b44b-f5b95feec937"
   VITE_LANGFLOW_IMAGE_COMPONENT_KEY = "ImageFile-GJs3c"
   # UI Configuration
-  VITE_SHOW_ITERATION_CONTROLS = "false"
+  VITE_SHOW_ITERATION_CONTROLS = "true"
 
 # Handle SPA routing
 [[redirects]]
