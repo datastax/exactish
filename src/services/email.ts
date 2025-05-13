@@ -2,16 +2,10 @@
  * Email service for sending notifications via SendGrid
  */
 
-// Define the API endpoint for the Netlify function that sends emails
-// Use the deployed function URL if available, otherwise use the local path
-const EMAIL_API_ENDPOINT = import.meta.env.VITE_NETLIFY_EMAIL_FUNCTION_URL || '/.netlify/functions/send-email';
-
-// console.log('Using email API endpoint:', EMAIL_API_ENDPOINT);
-
 /**
  * Interface for email notification data
  */
-interface EmailNotificationData {
+export interface EmailNotificationData {
   email: string;
   subject: string;
   message: string;
@@ -19,56 +13,74 @@ interface EmailNotificationData {
 }
 
 /**
- * Send an email notification using SendGrid via Netlify function
- * @param data - Email notification data
- * @returns Promise<boolean> - Whether the email was sent successfully
+ * Determines which platform is being used (Netlify or Vercel)
+ * @returns The platform name and API endpoint
  */
-export const sendEmailNotification = async (data: EmailNotificationData): Promise<boolean> => {
+const getPlatformInfo = (): { platform: 'netlify' | 'vercel', endpoint: string } => {
+  // Check if platform is explicitly set in environment variables
+  const platformOverride = import.meta.env.VITE_PLATFORM as 'netlify' | 'vercel' | undefined;
+  
+  if (platformOverride === 'netlify') {
+    return {
+      platform: 'netlify',
+      endpoint: import.meta.env.VITE_NETLIFY_EMAIL_FUNCTION_URL || '/.netlify/functions/send-email'
+    };
+  }
+  
+  if (platformOverride === 'vercel') {
+    return {
+      platform: 'vercel',
+      endpoint: import.meta.env.VITE_VERCEL_EMAIL_API_URL || '/api/send-email'
+    };
+  }
+  
+  // Auto-detect based on URL
+  const isVercel = window.location.hostname.includes('vercel.app');
+  
+  if (isVercel) {
+    return {
+      platform: 'vercel',
+      endpoint: import.meta.env.VITE_VERCEL_EMAIL_API_URL || '/api/send-email'
+    };
+  }
+  
+  // Default to Netlify
+  return {
+    platform: 'netlify',
+    endpoint: import.meta.env.VITE_NETLIFY_EMAIL_FUNCTION_URL || '/.netlify/functions/send-email'
+  };
+}
+console.log('Using email API endpoint:', getPlatformInfo().endpoint);
+/**
+ * Send email notification
+ * @param data - Email notification data
+ */
+export const sendEmailNotification = async (data: EmailNotificationData): Promise<void> => {
   try {
-    // console.log('🔵 SENDING EMAIL NOTIFICATION');
-    // console.log('📧 To:', data.email);
-    // console.log('📋 Subject:', data.subject);
-    // console.log('📝 Message:', data.message);
-    // console.log('🖼️ Image included:', !!data.imageData);
-    // console.log('🔗 Using endpoint:', EMAIL_API_ENDPOINT);
+    // Get platform info (Netlify or Vercel)
+    const { platform, endpoint } = getPlatformInfo();
+    console.log(`📧 [Service] Sending email via ${platform} to:`, data.email);
+    console.log('📧 [Service] Using API endpoint:', endpoint);
     
-    // Call the Netlify function to send the email
-    // console.log('⏳ Calling Netlify function...');
-    const response = await fetch(EMAIL_API_ENDPOINT, {
+    const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
     });
-    
-    // console.log('📥 Response status:', response.status);
-    // console.log('📥 Response status text:', response.statusText);
-    
+
     if (!response.ok) {
-      let errorMessage = '';
-      try {
-        const errorData = await response.json();
-        console.error('📛 API error response:', errorData);
-        errorMessage = errorData.error || errorData.details || response.statusText;
-      } catch (jsonError) {
-        console.error('📛 Could not parse error response as JSON');
-        const textResponse = await response.text();
-        console.error('📛 Raw error response:', textResponse);
-        errorMessage = response.statusText;
-      }
-      throw new Error(`Failed to send email: ${errorMessage}`);
+      const errorData = await response.json().catch(() => ({}));
+      console.error('📧 [Service] Error sending email:', response.status, errorData);
+      throw new Error(`Failed to send email: ${response.status} ${response.statusText}`);
     }
-    
+
     const result = await response.json();
-    console.log('✅ Email notification sent successfully:', result);
-    return true;
+    console.log('📧 [Service] Email sent successfully:', result);
   } catch (error) {
-    console.error('❌ Error sending email notification:', error instanceof Error ? error.message : 'Unknown error');
-    if (error instanceof Error && error.stack) {
-      console.error('📚 Stack trace:', error.stack);
-    }
-    return false;
+    console.error('📧 [Service] Error in sendEmailNotification:', error);
+    throw error;
   }
 };
 

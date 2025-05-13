@@ -2,41 +2,32 @@
 const sgMail = require('@sendgrid/mail');
 const client = require('@sendgrid/client');
 
-exports.handler = async (event, context) => {
-  console.log('🔵 NETLIFY FUNCTION: send-email triggered');
-  console.log('🔍 Request method:', event.httpMethod);
-  console.log('🔍 Origin:', event.headers.origin || event.headers.Origin || 'No origin');
+module.exports = async (req, res) => {
+  console.log('🔵 API FUNCTION: send-email triggered');
+  console.log('🔍 Request method:', req.method);
+  console.log('🔍 Origin:', req.headers.origin || 'No origin');
   
   // Handle OPTIONS request (CORS preflight)
-  if (event.httpMethod === 'OPTIONS') {
+  if (req.method === 'OPTIONS') {
     console.log('🔵 Handling CORS preflight request');
-    return {
-      statusCode: 204, // No content
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Max-Age': '86400'
-      }
-    };
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Max-Age', '86400');
+    return res.status(204).end();
   }
   
   // Only allow POST requests
-  if (event.httpMethod !== 'POST') {
-    console.log('❌ Method not allowed:', event.httpMethod);
-    return {
-      statusCode: 405,
-      headers: {
-        'Access-Control-Allow-Origin': '*'
-      },
-      body: JSON.stringify({ error: 'Method Not Allowed' }),
-    };
+  if (req.method !== 'POST') {
+    console.log('❌ Method not allowed:', req.method);
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
   try {
     // Parse the request body
     console.log('📦 Parsing request body...');
-    const data = JSON.parse(event.body);
+    const data = req.body;
     const { email, subject, message, imageData } = data;
     
     console.log('📧 Email recipient:', email);
@@ -56,26 +47,16 @@ exports.handler = async (event, context) => {
       console.log(' Subject present:', !!subject);
       console.log(' Message present:', !!message);
       
-      return {
-        statusCode: 400,
-        headers: {
-          'Access-Control-Allow-Origin': '*'
-        },
-        body: JSON.stringify({ error: 'Missing required fields' }),
-      };
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      return res.status(400).json({ error: 'Missing required fields' });
     }
 
     // Set SendGrid API key from environment variable
     console.log(' Setting SendGrid API key...');
     if (!process.env.SENDGRID_API_KEY) {
       console.error(' SENDGRID_API_KEY is not defined in environment variables');
-      return {
-        statusCode: 500,
-        headers: {
-          'Access-Control-Allow-Origin': '*'
-        },
-        body: JSON.stringify({ error: 'SendGrid API key is not configured' }),
-      };
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      return res.status(500).json({ error: 'SendGrid API key is not configured' });
     }
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -150,17 +131,12 @@ exports.handler = async (event, context) => {
         console.log(' Marketing contacts feature is disabled. Set SENDGRID_ENABLE_MARKETING=true to enable.');
       }
       
-      return {
-        statusCode: 200,
-        headers: {
-          'Access-Control-Allow-Origin': '*'
-        },
-        body: JSON.stringify({ 
-          message: 'Email sent successfully',
-          recipient: email,
-          timestamp: new Date().toISOString()
-        }),
-      };
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      return res.status(200).json({ 
+        message: 'Email sent successfully',
+        recipient: email,
+        timestamp: new Date().toISOString()
+      });
     } catch (sendGridError) {
       console.error(' SendGrid error:', sendGridError);
       if (sendGridError.response) {
@@ -172,16 +148,11 @@ exports.handler = async (event, context) => {
     console.error(' Error in send-email function:', error);
     console.error(' Error stack:', error.stack);
     
-    return {
-      statusCode: 500,
-      headers: {
-        'Access-Control-Allow-Origin': '*'
-      },
-      body: JSON.stringify({ 
-        error: 'Error sending email', 
-        details: error.message,
-        timestamp: new Date().toISOString()
-      }),
-    };
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    return res.status(500).json({ 
+      error: 'Error sending email', 
+      details: error.message,
+      timestamp: new Date().toISOString()
+    });
   }
 };
