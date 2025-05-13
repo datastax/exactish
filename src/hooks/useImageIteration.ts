@@ -1,13 +1,11 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { processImageWithLangflow, base64ToFile, fileToBase64 } from '../services/langflow';
 import { AppState } from '../types';
-import { requestNotificationPermission, sendNotification } from '../utils/notifications';
+import { isNotificationPermissionGranted, sendNotification } from '../utils/notifications';
+import { sendEmailNotification } from '../services/email';
+import { createGifForEmail } from '../services/animation';
 
 export const useImageIteration = () => {
-  // Request notification permission when the hook is first used
-  useEffect(() => {
-    requestNotificationPermission();
-  }, []);
   const [state, setState] = useState<AppState>({
     originalImage: null,
     originalImagePreview: null,
@@ -16,6 +14,7 @@ export const useImageIteration = () => {
     isProcessing: false,
     iterationImages: [],
     error: null,
+    notificationEmail: null,
   });
 
   const setOriginalImage = useCallback(async (file: File | null) => {
@@ -67,6 +66,13 @@ export const useImageIteration = () => {
       isProcessing: false,
       iterationImages: [],
       error: null,
+    }));
+  }, []);
+  
+  const setNotificationEmail = useCallback((email: string | null) => {
+    setState(prev => ({
+      ...prev,
+      notificationEmail: email,
     }));
   }, []);
 
@@ -136,11 +142,22 @@ export const useImageIteration = () => {
             isProcessing: false,
           }));
           
-          // Send error notification
-          sendNotification('Image Processing Error', {
-            body: `There was an error processing your image in iteration ${i + 1}. Please check the application for details.`,
-            icon: '/favicon.ico'
-          });
+          // Send error notification if permission is granted
+          if (isNotificationPermissionGranted()) {
+            sendNotification('Image Processing Error', {
+              body: `There was an error processing your image in iteration ${i + 1}. Please check the application for details.`,
+              icon: '/favicon.ico'
+            });
+          }
+          
+          // Send email notification if email is provided
+          if (state.notificationEmail) {
+            sendEmailNotification({
+              email: state.notificationEmail,
+              subject: 'Error Processing Your Image',
+              message: `There was an error processing your image in iteration ${i + 1}. Please try again with a different image.`
+            });
+          }
           
           return;
         }
@@ -152,11 +169,40 @@ export const useImageIteration = () => {
       }));
       console.log('Iteration process completed successfully');
       
-      // Send completion notification
-      sendNotification('Image Processing Complete', {
-        body: `Successfully completed ${state.iterations} iterations of your image.`,
-        icon: '/favicon.ico'
-      });
+      // Send completion notification if permission is granted
+      if (isNotificationPermissionGranted()) {
+        sendNotification('Image Processing Complete', {
+          body: `Successfully completed ${state.iterations} iterations of your image.`,
+          icon: '/favicon.ico'
+        });
+      }
+      
+      // Send email notification with GIF if email is provided
+      if (state.notificationEmail && state.iterationImages.length > 0) {
+        try {
+          // Generate GIF from all iteration images
+          const gifDataUri = await createGifForEmail(state.iterationImages);
+          
+          // Send email with the GIF
+          sendEmailNotification({
+            email: state.notificationEmail,
+            subject: 'Your Image Processing is Complete',
+            message: `Your image processing has completed successfully with ${state.iterations} iterations. We've attached a GIF showing all iterations of your image.`,
+            imageData: gifDataUri
+          });
+        } catch (error) {
+          console.error('Error creating GIF for email:', error);
+          
+          // Fallback to sending just the last image if GIF creation fails
+          const lastImage = state.iterationImages[state.iterationImages.length - 1];
+          sendEmailNotification({
+            email: state.notificationEmail,
+            subject: 'Your Image Processing is Complete',
+            message: `Your image processing has completed successfully with ${state.iterations} iterations. We've attached the final result of your image processing.`,
+            imageData: lastImage?.imageData
+          });
+        }
+      }
     } catch (error) {
       console.error('Error during iteration process:', error);
       const errorMessage = error instanceof Error 
@@ -168,11 +214,22 @@ export const useImageIteration = () => {
         error: errorMessage,
       }));
       
-      // Send error notification
-      sendNotification('Image Processing Error', {
-        body: 'There was an error processing your image. Please check the application for details.',
-        icon: '/favicon.ico'
-      });
+      // Send error notification if permission is granted
+      if (isNotificationPermissionGranted()) {
+        sendNotification('Image Processing Error', {
+          body: 'There was an error processing your image. Please check the application for details.',
+          icon: '/favicon.ico'
+        });
+      }
+      
+      // Send email notification if email is provided
+      if (state.notificationEmail) {
+        sendEmailNotification({
+          email: state.notificationEmail,
+          subject: 'Error Processing Your Image',
+          message: 'There was an error processing your image. Please try again with a different image.'
+        });
+      }
     }
   }, [state.originalImage, state.iterations]);
 
@@ -182,5 +239,6 @@ export const useImageIteration = () => {
     setIterations,
     startIterationProcess,
     resetState,
+    setNotificationEmail,
   };
 };

@@ -12,4 +12,5 @@ export interface AppState {
   isProcessing: boolean;
   iterationImages: IterationImage[];
   error: string | null;
+  notificationEmail: string | null;
 }

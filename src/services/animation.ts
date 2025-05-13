@@ -61,6 +61,35 @@ export const createGif = async (images: IterationImage[]): Promise<Blob> => {
   });
 };
 
+/**
+ * Creates a GIF from the iteration images and returns it as a base64 data URI for email
+ * @param images - Array of iteration images
+ * @returns Promise<string> - Base64 data URI of the GIF
+ */
+export const createGifForEmail = async (images: IterationImage[]): Promise<string> => {
+  try {
+    // Create the GIF blob
+    const gifBlob = await createGif(images);
+    
+    // Convert the blob to base64
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === 'string') {
+          resolve(reader.result);
+        } else {
+          reject(new Error('Failed to convert GIF to base64'));
+        }
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(gifBlob);
+    });
+  } catch (error) {
+    console.error('Error creating GIF for email:', error);
+    throw error;
+  }
+};
+
 export const createVideo = async (images: IterationImage[]): Promise<Blob> => {
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d')!;

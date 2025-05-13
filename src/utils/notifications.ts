@@ -3,11 +3,30 @@
  */
 
 /**
+ * Check if notifications are supported by the browser
+ * @returns boolean - Whether notifications are supported
+ */
+export const areNotificationsSupported = (): boolean => {
+  return 'Notification' in window;
+};
+
+/**
+ * Check if notification permission is already granted
+ * @returns boolean - Whether permission is already granted
+ */
+export const isNotificationPermissionGranted = (): boolean => {
+  if (!areNotificationsSupported()) {
+    return false;
+  }
+  return Notification.permission === 'granted';
+};
+
+/**
  * Request notification permission if not already granted
  * @returns Promise<boolean> - Whether permission is granted
  */
 export const requestNotificationPermission = async (): Promise<boolean> => {
-  if (!('Notification' in window)) {
+  if (!areNotificationsSupported()) {
     console.log('This browser does not support desktop notifications');
     return false;
   }

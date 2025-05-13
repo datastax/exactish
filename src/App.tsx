@@ -3,6 +3,7 @@ import ImageUploader from './components/ImageUploader';
 import IterationControl from './components/IterationControl';
 import ResultGallery from './components/ResultGallery';
 import ErrorDisplay from './components/ErrorDisplay';
+import NotificationPreferences from './components/NotificationPreferences';
 import { useImageIteration } from './hooks/useImageIteration';
 import { DemoHeroGeometric } from './components/ui/demo';
 
@@ -13,6 +14,7 @@ function App() {
     setIterations,
     startIterationProcess,
     resetState,
+    setNotificationEmail,
   } = useImageIteration();
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
@@ -77,15 +79,26 @@ function App() {
               </div>
               <h2 className="text-xl font-bold text-white ml-3">Configure & Start</h2>
             </div>
-            <IterationControl
-              iterations={state.iterations}
-              onIterationsChange={setIterations}
-              currentIteration={state.currentIteration}
-              isProcessing={state.isProcessing}
-              onStart={startIterationProcess}
-              onReset={resetState}
-              disabled={!state.originalImage}
-            />
+            <div className="space-y-6">
+              <IterationControl
+                iterations={state.iterations}
+                onIterationsChange={setIterations}
+                currentIteration={state.currentIteration}
+                isProcessing={state.isProcessing}
+                onStart={startIterationProcess}
+                onReset={resetState}
+                disabled={!state.originalImage}
+              />
+              
+              {state.originalImage && !state.isProcessing && state.iterationImages.length === 0 && (
+                <div className="border-t border-white/5 pt-6">
+                  <NotificationPreferences
+                    onEmailSubmit={setNotificationEmail}
+                    isProcessing={state.isProcessing}
+                  />
+                </div>
+              )}
+            </div>
           </div>
           
           {state.iterationImages.length > 0 && (
