@@ -36,8 +36,8 @@ function App() {
             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="w-full md:w-5/12 text-center">
                 <h3 className="text-xl font-bold text-white mb-2">From this...</h3>
-                <div className="relative w-full aspect-square md:aspect-auto md:h-64 overflow-hidden rounded-lg border border-white/10">
-                  <img src="/Before.jpeg" alt="Before" className="w-full h-full object-contain" />
+                <div className="relative w-full overflow-hidden rounded-lg border border-white/10 flex items-center justify-center">
+                  <img src="/roll-safe-before.jpg" alt="Before" className="w-full h-auto max-h-80 object-contain" />
                 </div>
               </div>
               
@@ -51,8 +51,8 @@ function App() {
               
               <div className="w-full md:w-5/12 text-center">
                 <h3 className="text-xl font-bold text-white mb-2">...to this</h3>
-                <div className="relative w-full aspect-square md:aspect-auto md:h-64 overflow-hidden rounded-lg border border-white/10">
-                  <img src="/After.gif" alt="After" className="w-full h-full object-contain" />
+                <div className="relative w-full overflow-hidden rounded-lg border border-white/10 flex items-center justify-center">
+                  <img src="/roll-safe.gif" alt="After" className="w-full h-auto max-h-80 object-contain" />
                 </div>
               </div>
             </div>
