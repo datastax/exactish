@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Toaster } from 'react-hot-toast';
 import ImageUploader from './components/ImageUploader';
 import IterationControl from './components/IterationControl';
 import ResultGallery from './components/ResultGallery';
@@ -26,6 +27,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-[#030303]">
+      <Toaster />
       <DemoHeroGeometric />
       
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-0 relative z-10 -mt-80">
@@ -89,22 +91,26 @@ function App() {
                 disabled={!state.originalImage}
               />
               
-              {state.originalImage && !state.isProcessing && state.iterationImages.length === 0 && (
+              {state.originalImage && (
                 <div className="border-t border-white/5 pt-6">
-                  <NotificationPreferences
-                    onEmailSubmit={setNotificationEmail}
-                    isProcessing={state.isProcessing}
-                  />
+                  {!state.isProcessing && state.iterationImages.length === 0 && (
+                    <NotificationPreferences
+                      onEmailSubmit={setNotificationEmail}
+                      isProcessing={state.isProcessing}
+                    />
+                  )}
                   
-                  {/* Start button moved below notification preferences */}
+                  {/* Start button or processing indicator */}
                   <div className="mt-6">
                     <button
                       onClick={startIterationProcess}
                       disabled={state.isProcessing || !state.originalImage}
                       className={`w-full py-3 px-4 rounded-lg text-white font-medium transition-all shadow-lg flex items-center justify-center gap-2
-                        ${state.isProcessing || !state.originalImage
+                        ${state.isProcessing
                           ? 'bg-gray-500 bg-opacity-50 cursor-not-allowed'
-                          : 'bg-gradient-to-r from-indigo-400 to-rose-400 hover:from-indigo-500 hover:to-rose-500'}
+                          : !state.originalImage
+                            ? 'bg-gray-500 bg-opacity-50 cursor-not-allowed'
+                            : 'bg-gradient-to-r from-indigo-400 to-rose-400 hover:from-indigo-500 hover:to-rose-500'}
                       `}
                     >
                       {state.isProcessing && (

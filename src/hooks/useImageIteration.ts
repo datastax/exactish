@@ -4,6 +4,7 @@ import { AppState } from '../types';
 import { isNotificationPermissionGranted, sendNotification } from '../utils/notifications';
 import { sendEmailNotification } from '../services/email';
 import { createGifForEmail } from '../services/animation';
+import toast from 'react-hot-toast';
 
 export const useImageIteration = () => {
   // Initialize state with saved email from localStorage if available
@@ -109,6 +110,12 @@ export const useImageIteration = () => {
         iterationImages: [],
         currentIteration: 0,
       }));
+      
+      // Show toast notification to keep tab open
+      toast.success(
+        'Processing started! Please keep this tab open until processing completes.',
+        { duration: 5000, position: 'top-center' }
+      );
 
       // Add the original image as the first iteration
       const originalBase64 = await fileToBase64(state.originalImage);
@@ -188,6 +195,12 @@ export const useImageIteration = () => {
         ...prev,
         isProcessing: false,
       }));
+      
+      // Show completion toast
+      toast.success('Processing complete! You can now view and download your results.', {
+        duration: 5000,
+        position: 'top-center'
+      });
       console.log('Iteration process completed successfully');
       
       // Debug email notification state
@@ -255,6 +268,15 @@ export const useImageIteration = () => {
             });
             
             console.log('📧 [Iteration] Plain email sent successfully');
+            
+            // Remove email from localStorage after sending
+            localStorage.removeItem('notificationEmail');
+            
+            // Update state to reflect email removal
+            setState(prev => ({
+              ...prev,
+              notificationEmail: null,
+            }));
           } else {
             // Generate GIF from all iteration images
             // console.log('📧 [Iteration] Attempting to create GIF from', state.iterationImages.length, 'images');
@@ -271,6 +293,15 @@ export const useImageIteration = () => {
             });
             
             // console.log('📧 [Iteration] Email with GIF sent successfully');
+            
+            // Remove email from localStorage after sending
+            localStorage.removeItem('notificationEmail');
+            
+            // Update state to reflect email removal
+            setState(prev => ({
+              ...prev,
+              notificationEmail: null,
+            }));
           }
         } catch (error) {
           console.error('Error creating GIF for email:', error);
@@ -289,6 +320,15 @@ export const useImageIteration = () => {
               });
               
               // console.log('📧 [Iteration] Fallback email sent successfully');
+              
+              // Remove email from localStorage after sending
+              localStorage.removeItem('notificationEmail');
+              
+              // Update state to reflect email removal
+              setState(prev => ({
+                ...prev,
+                notificationEmail: null,
+              }));
             } else {
               // No images available, send plain email
               sendEmailNotification({
@@ -298,6 +338,15 @@ export const useImageIteration = () => {
               });
               
               // console.log('📧 [Iteration] Plain fallback email sent successfully');
+              
+              // Remove email from localStorage after sending
+              localStorage.removeItem('notificationEmail');
+              
+              // Update state to reflect email removal
+              setState(prev => ({
+                ...prev,
+                notificationEmail: null,
+              }));
             }
           } catch (fallbackError) {
             console.error('Error sending fallback email:', fallbackError);
