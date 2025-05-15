@@ -28,36 +28,13 @@ function App() {
   return (
     <div className="min-h-screen bg-[#030303]">
       <Toaster />
-      <DemoHeroGeometric />
+      {<DemoHeroGeometric />}
       
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-0 relative z-10 -mt-80">
-        <div className="bg-transparent backdrop-filter backdrop-blur-sm shadow-xl rounded-xl overflow-hidden border border-white/10 mb-8">
-          <div className="p-6">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-              <div className="w-full md:w-5/12 text-center">
-                <h3 className="text-xl font-bold text-white mb-2">From this...</h3>
-                <div className="relative w-full overflow-hidden rounded-lg border border-white/10 flex items-center justify-center">
-                  <img src="/roll-safe-before.jpg" alt="Before" className="w-full h-auto max-h-80 object-contain" />
-                </div>
-              </div>
-              
-              <div className="flex items-center justify-center py-2 md:py-0">
-                <div className="w-10 h-10 md:w-16 md:h-16 rounded-full bg-white/10 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 md:h-8 md:w-8 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                </div>
-              </div>
-              
-              <div className="w-full md:w-5/12 text-center">
-                <h3 className="text-xl font-bold text-white mb-2">...to this</h3>
-                <div className="relative w-full overflow-hidden rounded-lg border border-white/10 flex items-center justify-center">
-                  <img src="/roll-safe.gif" alt="After" className="w-full h-auto max-h-80 object-contain" />
-                </div>
-              </div>
-            </div>
-          </div>
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-0">
+        <div> 
+          <img src="/roll-safe.gif" className="w-full max-h-80 object-contain"/>
         </div>
+ 
 
         <div className="bg-transparent backdrop-filter backdrop-blur-sm shadow-xl rounded-xl overflow-hidden border border-white/10">
           <div className="p-6">
@@ -79,7 +56,7 @@ function App() {
               <div className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-400 to-rose-400 flex items-center justify-center text-white font-bold text-lg shadow-md">
                 2
               </div>
-              <h2 className="text-xl font-bold text-white ml-3">Configure & Start</h2>
+              <h2 className="text-xl font-bold text-white ml-3">Create Exactish Gif</h2>
             </div>
             <div className="space-y-6">
               <IterationControl
@@ -94,10 +71,11 @@ function App() {
               {state.originalImage && (
                 <div className="border-t border-white/5 pt-6">
                   {!state.isProcessing && state.iterationImages.length === 0 && (
-                    <NotificationPreferences
+                    <div>
+                    {/*<NotificationPreferences
                       onEmailSubmit={setNotificationEmail}
                       isProcessing={state.isProcessing}
-                    />
+                    />*/}</div>
                   )}
                   
                   {/* Start button or processing indicator */}
