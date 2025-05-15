@@ -5,12 +5,15 @@ A modern web application for generating, iterating, and visualizing AI-powered i
 ## 🚀 Overview
 Exactish lets you create, refine, and animate AI-generated images in an iterative workflow. Powered by [Langflow](https://langflow.org), it provides a seamless and interactive UI for creative exploration with advanced AI models.
 
+![roll-safe](https://github.com/user-attachments/assets/0ce3957f-b65c-449c-85f1-4749cc142c1a)
+
+
 ## 🛠️ Tech Stack
 - **Frontend:** React (TypeScript, Vite)
 - **AI Orchestration:** [Langflow](https://langflow.org)
 - **Backend Functions:** Netlify serverless functions (Node.js) or Vercel serverless functions (Node.js)
 - **Styling:** CSS Modules / Tailwind CSS (edit as appropriate)
-- **Email Service:** Nodemailer (via Netlify functions) or SendGrid API (via Vercel)
+- **Email Service:** SendGrid API
 - **Animation:** Custom animation logic in TypeScript
 
 ## ✨ Features
@@ -68,11 +71,11 @@ Exactish lets you create, refine, and animate AI-generated images in an iterativ
 ## 🚀 Deploying to Netlify
 1. Push your code to GitHub.
 2. Go to [netlify.com](https://www.netlify.com/) and import your repository.
-3. Set up environment variables in the Netlify dashboard (such as email configuration for Nodemailer, API keys, etc).
+3. Set up environment variables in the Netlify dashboard (including your SendGrid API key for email support, API keys, etc).
 4. Netlify will automatically detect your build settings (or set them as follows: Build Command: `npm run build`, Publish directory: `dist`).
 5. Deploy and your app will be live at your Netlify-assigned domain.
 
-**Note:** When deployed to Netlify, the app uses Netlify serverless functions for backend logic and Nodemailer for sending emails.
+**Note:** When deployed to Netlify, the app uses Netlify serverless functions for backend logic and SendGrid for sending emails.
 
 ## 🧠 How It Works
 - The core prompt used is: **"Create the exact replica of this image, don't change a thing."**
